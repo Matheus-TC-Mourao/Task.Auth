@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class AuthService {
       throw new UnauthorizedException('Senha inválida');
     }
 
-    const payload = { sub: user.id, email: user.email };
+    const payload = { userId: user.id, email: user.email };
 
     return this.jwtService.sign(payload);
   }
