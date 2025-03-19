@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Inject,
   Param,
   Patch,
   Post,
@@ -15,10 +16,15 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { RequestUser } from 'src/interfaces/request-user.interface';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(
+    private readonly tasksService: TasksService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER) private logger: Logger,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -29,21 +35,37 @@ export class TasksController {
     @Query('page') page = '1',
     @Query('limit') limit = '10',
   ) {
+    this.logger.log(
+      'info',
+      `Buscando tarefa para o usuário: ${req.user.userId}`,
+    );
+
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
 
-    return this.tasksService.findAll(req.user.userId, {
+    const task = await this.tasksService.findAll(req.user.userId, {
       status,
       search,
       page: pageNumber,
       limit: limitNumber,
     });
+
+    this.logger.log('info', 'Tarefas encontradas com sucesso');
+    return task;
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string, @Request() req: RequestUser) {
-    return this.tasksService.findOne(id, req.user.userId);
+    this.logger.log(
+      'info',
+      `Buscando tarefa para o usuário: ${req.user.userId}`,
+    );
+
+    const task = await this.tasksService.findOne(id, req.user.userId);
+
+    this.logger.log('info', `Tarefa encontrada com sucesso: ${task.id}`);
+    return task;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -52,7 +74,13 @@ export class TasksController {
     @Body() createTaskDto: CreateTaskDto,
     @Request() req: RequestUser,
   ) {
-    return this.tasksService.create(createTaskDto, req.user.userId);
+    this.logger.log(
+      'info',
+      `Criando tarefa para o usuário: ${req.user.userId}`,
+    );
+    const task = await this.tasksService.create(createTaskDto, req.user.userId);
+    this.logger.log('info', `Tarefa criada com sucesso : ${task.id}`);
+    return task;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -62,12 +90,28 @@ export class TasksController {
     @Request() req: RequestUser,
     @Body() updateTaskDto: UpdateTaskDto,
   ) {
-    return this.tasksService.update(id, req.user.userId, updateTaskDto);
+    this.logger.log(
+      'info',
+      `Atualizando tarefa para o usuário: ${req.user.userId}`,
+    );
+    const task = await this.tasksService.update(
+      id,
+      req.user.userId,
+      updateTaskDto,
+    );
+    this.logger.log('info', `Tarefa atualizada com sucesso: ${task.id}`);
+    return task;
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: string, @Request() req: RequestUser) {
-    return this.tasksService.delete(id, req.user.userId);
+    this.logger.log(
+      'info',
+      `Deletando tarefa para o usuário: ${req.user.userId}`,
+    );
+    const task = await this.tasksService.delete(id, req.user.userId);
+    this.logger.log('info', `Tarefa deletada com sucesso: ${task.id}`);
+    return task;
   }
 }
