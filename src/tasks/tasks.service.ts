@@ -6,21 +6,21 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { TasksQuery } from 'src/interfaces/tasks-query.interface';
-import { Prisma, TaskStatus } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import { TasksQueryDto } from './dto/task-query.dto';
 
 @Injectable()
 export class TasksService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(userId: string, query: TasksQuery) {
+  async findAll(userId: string, query: TasksQueryDto) {
     const { status, search, page, limit } = query;
     const skip = (page - 1) * limit;
 
     const filters: Prisma.TaskWhereInput = {};
 
     if (status) {
-      filters.status = status as TaskStatus;
+      filters.status = status;
     }
 
     if (search) {

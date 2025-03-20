@@ -18,6 +18,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { RequestUser } from 'src/interfaces/request-user.interface';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger } from 'winston';
+import { TasksQueryDto } from './dto/task-query.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -28,27 +29,13 @@ export class TasksController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(
-    @Request() req: RequestUser,
-    @Query('status') status?: string,
-    @Query('search') search?: string,
-    @Query('page') page = '1',
-    @Query('limit') limit = '10',
-  ) {
+  async findAll(@Request() req: RequestUser, @Query() query: TasksQueryDto) {
     this.logger.log(
       'info',
       `Buscando tarefa para o usuário: ${req.user.userId}`,
     );
 
-    const pageNumber = parseInt(page, 10);
-    const limitNumber = parseInt(limit, 10);
-
-    const task = await this.tasksService.findAll(req.user.userId, {
-      status,
-      search,
-      page: pageNumber,
-      limit: limitNumber,
-    });
+    const task = await this.tasksService.findAll(req.user.userId, query);
 
     this.logger.log('info', 'Tarefas encontradas com sucesso');
     return task;
