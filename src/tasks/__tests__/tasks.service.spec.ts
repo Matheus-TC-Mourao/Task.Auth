@@ -95,8 +95,6 @@ describe('TasksService', () => {
       const anotherTask = {
         ...mockTask,
         userId: 'another-user-uuid',
-        // created_at: new Date(),
-        // updated_at: new Date(),
       };
       jest
         .spyOn(prismaService.task, 'findUnique')
