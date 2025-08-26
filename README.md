@@ -6,12 +6,8 @@ Esta API foi construída para gerenciamento de tarefas, utilizando autenticaçã
 
 ## Índice
 
-- [API de Tarefas com Autenticação](#api-de-tarefas-com-autenticação)
-  - [Índice](#índice)
   - [Recursos do Projeto](#recursos-do-projeto)
   - [Tecnologias Utilizadas](#tecnologias-utilizadas)
-  - [Estrutura de Pastas](#estrutura-de-pastas)
-  - [Configuração de Variáveis de Ambiente](#configuração-de-variáveis-de-ambiente)
   - [Como Rodar o Projeto](#como-rodar-o-projeto)
   - [Como Executar os Testes](#como-executar-os-testes)
   - [Rotas da API](#rotas-da-api)
@@ -46,73 +42,6 @@ Esta API foi construída para gerenciamento de tarefas, utilizando autenticaçã
 
 ---
 
-## Estrutura de Pastas
-
-```
-├── src/
-│   ├── auth/
-│   │   ├──dto/
-│   │   │   ├── login.dto.ts
-│   │   │   └── register.dto.ts
-│   │   ├── strategies/
-│   │   │   └── jwt.strategy.ts
-│   │   ├── guards/
-│   │   │   └── jwt-auth.guard.ts
-│   │   ├──__tests__/
-│   │   │   ├── auth.service.spec.ts
-│   │   │   └── auth.controller.spec.ts
-│   │   ├── auth.controller.ts
-│   │   ├── auth.module.ts
-│   │   ├── auth.service.ts
-│   ├── tasks/
-│   │   ├──dto/
-│   │   │   ├── create-task.dto.ts
-│   │   │   ├── task-query.dto.ts
-│   │   │   └── update-task.dto.ts
-│   │   ├──__tests__/
-│   │   │   ├── tasks.service.spec.ts
-│   │   │   └── tasks.controller.spec.ts
-│   │   ├── tasks.controller.ts
-│   │   ├── tasks.module.ts
-│   │   └── tasks.service.ts
-│   ├── health/
-│   │   ├── health.controller.ts
-│   │   ├── health.module.ts
-│   │   └── prisma.health.ts
-│   ├──interfaces/
-│   │   ├── jwt-payload.interface.ts
-│   │   └── request-user.interface.ts
-│   ├── prisma/
-│   │   ├── prisma.module.ts
-│   │   └── prisma.service.ts
-│   ├── app.controller.ts
-│   ├── app.module.ts
-│   ├── app.service.ts
-│   ├── main.ts
-```
-
----
-
-## Configuração de Variáveis de Ambiente
-
-Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis (exemplo):
-
-```env
-# Porta da aplicação
-PORT=3000
-
-# Configuração do banco de dados
-DATABASE_URL="file:./dev.db"
-
-# JWT
-JWT_SECRET=supersecretkey
-
-```
-
-> **Dica:** Utilize a biblioteca [dotenv](https://www.npmjs.com/package/dotenv) para carregar essas variáveis durante a execução.
-
----
-
 ## Como Rodar o Projeto
 
 1. **Clone o repositório:**
@@ -129,7 +58,19 @@ JWT_SECRET=supersecretkey
    ```
 
 3. **Configure as variáveis de ambiente:**
-   Crie o arquivo `.env` conforme descrito acima.
+   Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis (exemplo):
+
+    ```env
+    # Porta da aplicação
+    PORT=3000
+    
+    # Configuração do banco de dados
+    DATABASE_URL="file:./dev.db"
+    
+    # JWT
+    JWT_SECRET=supersecretkey
+    
+    ```
 
 4. **Execute as migrações do Prisma:**
 
@@ -243,3 +184,4 @@ npm run test:watch
   Retorna o status de saúde da aplicação.
 
 ---
+
